@@ -1,9 +1,6 @@
 -- MySQL Workbench Forward Engineering
 
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
-
+ 
 -- -----------------------------------------------------
 -- Schema all-in1
 -- -----------------------------------------------------
@@ -13,7 +10,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 DROP DATABASE IF EXISTS `all-in1`;
 
-CREATE SCHEMA IF NOT EXISTS `all-in1` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+CREATE SCHEMA IF NOT EXISTS `all-in1` ;
 USE `all-in1` ;
 
 -- -----------------------------------------------------
@@ -28,10 +25,8 @@ CREATE TABLE IF NOT EXISTS `all-in1`.`Admins` (
   `role` VARCHAR(45) NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`admin_id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`admin_id`));
+
 
 
 -- -----------------------------------------------------
@@ -47,10 +42,8 @@ CREATE TABLE IF NOT EXISTS `all-in1`.`Contributors` (
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `status` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`contributor_id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`contributor_id`));
+
 
 
 
@@ -59,7 +52,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `all-in1`.`donations` (
   `donation_id` INT NOT NULL AUTO_INCREMENT,
-  `Donation name` VARCHAR(255) NULL,
+  `donation_name` VARCHAR(255) NULL,
   `type` VARCHAR(45) NULL,
   `status` VARCHAR(255) NOT NULL,
   `image_url` VARCHAR(255) NOT NULL,
@@ -68,8 +61,8 @@ CREATE TABLE IF NOT EXISTS `all-in1`.`donations` (
   `receiver_id` INT NOT NULL,
   `owner_id` INT NOT NULL,
   PRIMARY KEY (`donation_id`, `receiver_id`, `owner_id`),
-  INDEX `fk_donations_Contributors1_idx` (`receiver_id` ASC) VISIBLE,
-  INDEX `fk_donations_Contributors2_idx` (`owner_id` ASC) VISIBLE,
+  INDEX `fk_donations_Contributors1_idx` (`receiver_id` ASC) ,
+  INDEX `fk_donations_Contributors2_idx` (`owner_id` ASC) ,
   CONSTRAINT `fk_donations_Contributors1`
     FOREIGN KEY (`receiver_id`)
     REFERENCES `all-in1`.`Contributors` (`contributor_id`)
@@ -79,10 +72,8 @@ CREATE TABLE IF NOT EXISTS `all-in1`.`donations` (
     FOREIGN KEY (`owner_id`)
     REFERENCES `all-in1`.`Contributors` (`contributor_id`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    ON UPDATE NO ACTION);
+
 
 
 -- -----------------------------------------------------
@@ -98,10 +89,8 @@ CREATE TABLE IF NOT EXISTS `all-in1`.`Events` (
   `amount` INT(255) NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`event_id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`event_id`));
+
 
 
 -- -----------------------------------------------------
@@ -115,10 +104,9 @@ CREATE TABLE IF NOT EXISTS `all-in1`.`Needs` (
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `amount` FLOAT NOT NULL,
   `type` ENUM('money', 'goods') NOT NULL,
-  PRIMARY KEY (`need_id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`need_id`));
+
+
 
 
 -- -----------------------------------------------------
@@ -130,9 +118,9 @@ CREATE TABLE IF NOT EXISTS `all-in1`.`Contributors_has_Needs` (
   `provider_id` INT NOT NULL,
   `amount` FLOAT NULL,
   PRIMARY KEY (`owner_id`, `Needs_need_id`, `provider_id`),
-  INDEX `fk_Contributors_has_Needs_Needs1_idx` (`Needs_need_id` ASC) VISIBLE,
-  INDEX `fk_Contributors_has_Needs_Contributors1_idx` (`owner_id` ASC) VISIBLE,
-  INDEX `fk_Contributors_has_Needs_Contributors2_idx` (`provider_id` ASC) VISIBLE,
+  INDEX `fk_Contributors_has_Needs_Needs1_idx` (`Needs_need_id` ASC) ,
+  INDEX `fk_Contributors_has_Needs_Contributors1_idx` (`owner_id` ASC) ,
+  INDEX `fk_Contributors_has_Needs_Contributors2_idx` (`provider_id` ASC) ,
   CONSTRAINT `fk_Contributors_has_Needs_Contributors1`
     FOREIGN KEY (`owner_id`)
     REFERENCES `all-in1`.`Contributors` (`contributor_id`)
@@ -147,10 +135,8 @@ CREATE TABLE IF NOT EXISTS `all-in1`.`Contributors_has_Needs` (
     FOREIGN KEY (`provider_id`)
     REFERENCES `all-in1`.`Contributors` (`contributor_id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    ON UPDATE NO ACTION);
+
 
 
 -- -----------------------------------------------------
@@ -160,8 +146,8 @@ CREATE TABLE IF NOT EXISTS `all-in1`.`Contributors_has_Events` (
   `Contributors_contributor_id` INT NOT NULL,
   `Events_event_id` INT(20) NOT NULL,
   PRIMARY KEY (`Contributors_contributor_id`, `Events_event_id`),
-  INDEX `fk_Contributors_has_Events_Events1_idx` (`Events_event_id` ASC) VISIBLE,
-  INDEX `fk_Contributors_has_Events_Contributors1_idx` (`Contributors_contributor_id` ASC) VISIBLE,
+  INDEX `fk_Contributors_has_Events_Events1_idx` (`Events_event_id` ASC) ,
+  INDEX `fk_Contributors_has_Events_Contributors1_idx` (`Contributors_contributor_id` ASC) ,
   CONSTRAINT `fk_Contributors_has_Events_Contributors1`
     FOREIGN KEY (`Contributors_contributor_id`)
     REFERENCES `all-in1`.`Contributors` (`contributor_id`)
@@ -171,12 +157,6 @@ CREATE TABLE IF NOT EXISTS `all-in1`.`Contributors_has_Events` (
     FOREIGN KEY (`Events_event_id`)
     REFERENCES `all-in1`.`Events` (`event_id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    ON UPDATE NO ACTION);
 
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
